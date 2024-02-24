@@ -1,26 +1,19 @@
 package com.example.bmiviewmodel
 
 import android.os.Bundle
-import android.support.v4.os.IResultReceiver2.Default
+
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,41 +34,36 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun BodyMassIndexApp(){
-    var heightInput: String by remember { mutableStateOf("") }
-    var weightInput: String by remember { mutableStateOf("") }
-    var height = heightInput.toFloatOrNull() ?: 0.0f
-    var weight = weightInput.toIntOrNull() ?: 0
-    var bmi = if (weight > 0 && height > 0) height / (height * height) else 0.0
+fun BodyMassIndexApp(viewModel: BMIViewModel = viewModel() ){
+    val reusableModifier = Modifier
+        .padding(8.dp)
+        .fillMaxWidth()
 
-    Column(){
+    Column(
+        verticalArrangement = Arrangement.Center,
+        modifier = reusableModifier
+    ){
+
         Text(
-            text = "Body mass index",
+            text = stringResource(R.string.BMIViewModel_title),
             fontSize = 24.sp,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp, bottom = 16.dp)
+            modifier = reusableModifier
         )
         OutlinedTextField(
-            value = heightInput,
-            onValueChange = {heightInput = it.replace(',', '.')},
-            label = {Text("Height")},
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            value = viewModel.heightInput,
+            onValueChange = { viewModel.changeHeightInput(it)},
+            label = { Text(text = stringResource(R.string.BMIViewModel_height))},
+            modifier = reusableModifier
         )
         OutlinedTextField(
-            value = weightInput,
-            onValueChange = {weightInput = it.replace(',', '.')},
-            label = {Text("Weight")},
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            value = viewModel.weightInput,
+            onValueChange = { viewModel.changeWeightInput(it)},
+            label = { Text(text = stringResource(R.string.BMIViewModel_weight))},
+            modifier = reusableModifier
         )
-        Text(
-            text = stringResource(R.string.result, String.format("%.2f", bmi).replace(',','.')),
+        Text(text = stringResource(R.string.BMIViewModel_result, String.format("%.2f", viewModel.result())).replace(',', '.')
         )
     }
 }
