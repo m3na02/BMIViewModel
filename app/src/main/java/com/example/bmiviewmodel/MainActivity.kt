@@ -43,26 +43,30 @@ fun BodyMassIndexApp(viewModel: BMIViewModel = viewModel() ){
         verticalArrangement = Arrangement.Center,
         modifier = reusableModifier
     ){
-
+        // Displaying the title text
         Text(
             text = stringResource(R.string.BMIViewModel_title),
-            fontSize = 24.sp,
+            fontSize = 24.sp, // setting the font size
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
             modifier = reusableModifier
         )
+        // Text field for entering the height
         OutlinedTextField(
             value = viewModel.heightInput,
             onValueChange = { viewModel.changeHeightInput(it)},
             label = { Text(text = stringResource(R.string.BMIViewModel_height))},
             modifier = reusableModifier
         )
+        // Text field for entering the weight
         OutlinedTextField(
             value = viewModel.weightInput,
             onValueChange = { viewModel.changeWeightInput(it)},
             label = { Text(text = stringResource(R.string.BMIViewModel_weight))},
             modifier = reusableModifier
         )
+
+        // Displaying the result
         Text(text = stringResource(R.string.BMIViewModel_result, String.format("%.2f", viewModel.result())).replace(',', '.')
         )
     }
